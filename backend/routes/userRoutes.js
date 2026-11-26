@@ -1,55 +1,51 @@
-const multer = require("multer");
 const express = require("express");
-
+const authMiddleware = require("../middlewares/authMiddleware");
+const passwordResetRateLimit = require("../middlewares/passwordResetRateLimit");
+const { upload } = require("../utils/upload");
 const {
   registerController,
+  registerDoctorController,
   loginController,
+  forgotPasswordController,
+  resetPasswordController,
   authController,
   docController,
+  markNotificationReadController,
   deleteallnotificationController,
   getallnotificationController,
   getAllDoctorsControllers,
+  getDoctorSlotsController,
   appointmentController,
   getAllUserAppointments,
-  getDocsController,
-  downloadDocController,
+  cancelAppointmentController,
+  requestRescheduleController,
+  reviewAppointmentController,
 } = require("../controllers/userC");
-const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
-router.get("/", (req, res) => {
-  res.json({ message: "User route is working!" });
-});
-
-const upload = multer({ dest: 'uploads/' })
 
 router.post("/register", registerController);
-
+router.post("/registerdoctor", registerDoctorController);
 router.post("/login", loginController);
+router.post("/forgotpassword", passwordResetRateLimit, forgotPasswordController);
+router.post("/resetpassword", resetPasswordController);
 
 router.post("/getuserdata", authMiddleware, authController);
-
 router.post("/registerdoc", authMiddleware, docController);
-
 router.get("/getalldoctorsu", authMiddleware, getAllDoctorsControllers);
-
-router.post("/getappointment",upload.single("image"), authMiddleware, appointmentController);
-
+router.get("/getdoctorslots", authMiddleware, getDoctorSlotsController);
 router.post(
-  "/getallnotification",
+  "/getappointment",
   authMiddleware,
-  getallnotificationController
+  upload.single("image"),
+  appointmentController
 );
-
-router.post(
-  "/deleteallnotification",
-  authMiddleware,
-  deleteallnotificationController
-);
-
+router.post("/cancelappointment", authMiddleware, cancelAppointmentController);
+router.post("/requestreschedule", authMiddleware, requestRescheduleController);
+router.post("/reviewappointment", authMiddleware, reviewAppointmentController);
+router.post("/getallnotification", authMiddleware, getallnotificationController);
+router.post("/marknotificationread", authMiddleware, markNotificationReadController);
+router.post("/deleteallnotification", authMiddleware, deleteallnotificationController);
 router.get("/getuserappointments", authMiddleware, getAllUserAppointments);
-
-router.get("/getDocsforuser", authMiddleware, getDocsController)
-
 
 module.exports = router;

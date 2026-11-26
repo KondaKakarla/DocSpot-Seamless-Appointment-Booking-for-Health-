@@ -1,74 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import Table from 'react-bootstrap/Table';
-import Alert from 'react-bootstrap/Alert';
-import { Container } from 'react-bootstrap';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import Table from "react-bootstrap/Table";
+import Alert from "react-bootstrap/Alert";
+import { Container } from "react-bootstrap";
+import api from "../../api";
 
 const AdminAppointments = () => {
+  const [allAppointments, setAllAppointments] = useState([]);
 
-   const [allAppointments, setAllAppointments] = useState([])
-
-   const getAppointments = async () => {
+  useEffect(() => {
+    (async () => {
       try {
-         const res = await axios.get('http://localhost:8001/api/admin/getallAppointmentsAdmin', {
-            headers: {
-               Authorization: `Bearer ${localStorage.getItem('token')}`
-            },
-         })
-         if (res.data.success) {
-            setAllAppointments(res.data.data)
-         }
-
+        const res = await api.get("/admin/getallAppointmentsAdmin");
+        if (res.data.success) setAllAppointments(res.data.data);
       } catch (error) {
-         console.log(error)
+        console.log(error);
       }
-   }
+    })();
+  }, []);
 
-   useEffect(() => {
-      getAppointments();
-   }, [])
-   return (
-      <div>
-         <h2 className='p-3 text-center'>All Appointments for Admin Panel</h2>
-         <Container>
-            <Table className='my-3' striped bordered hover>
-               <thead>
-                  <tr>
-                     <th>Appointment ID</th>
-                     <th>User Name</th>
-                     <th>Doctor Name</th>
-                     <th>Date</th>
-                     <th>Status</th>
+  return (
+    <div>
+      <h2 className="p-3 text-center">All Appointments</h2>
+      <Container>
+        <Table className="my-3" striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {allAppointments.length > 0 ? (
+              allAppointments.map((a) => (
+                <tr key={a._id}>
+                  <td>{a.userInfo?.fullName}</td>
+                  <td>{a.doctorInfo?.fullName}</td>
+                  <td>{a.date}</td>
+                  <td>{a.status}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4}>
+                  <Alert variant="info" className="mb-0">
+                    <Alert.Heading>No Appointments to show</Alert.Heading>
+                  </Alert>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+      </Container>
+    </div>
+  );
+};
 
-                  </tr>
-               </thead>
-               <tbody>
-                  {allAppointments.length > 0 ? (
-                     allAppointments.map((appointment) => {
-                        return (
-                           <tr key={appointment._id}>
-                              <td>{appointment._id}</td>
-                              <td>{appointment.userInfo.fullName}</td>
-                              <td>{appointment.doctorInfo.fullName}</td>
-                              <td>{appointment.date}</td>
-                              <td>{appointment.status}</td> 
-                           </tr>
-                        )
-                     })
-                  ) : (
-                     <tr>
-                        <td colSpan={6}>
-                           <Alert variant="info">
-                              <Alert.Heading>No Appointments to show</Alert.Heading>
-                           </Alert>
-                        </td>
-                     </tr>
-                  )}
-               </tbody>
-            </Table>
-         </Container>
-      </div>
-   )
-}
-
-export default AdminAppointments
+export default AdminAppointments;

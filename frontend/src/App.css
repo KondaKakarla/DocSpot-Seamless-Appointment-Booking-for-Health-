@@ -236,3 +236,66 @@ progress::-webkit-progress-value {
   background-color: grey;
   border-radius: 10px;
 }
+
+/***** additions *****/
+.body {
+  overflow-y: auto;
+}
+
+.menu-items {
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 6px;
+  width: 85%;
+}
+
+.menu-items a {
+  color: white;
+  margin-right: 0;
+}
+
+.menu-items.active {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.menu-items .icon {
+  margin-right: 8px;
+}
+
+.notify.active .icon {
+  color: #0d6efd;
+}
+
+.doctor-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    margin-right: 0;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  .menu {
+    margin-top: 10px;
+  }
+  .main {
+    height: auto;
+  }
+  .body {
+    height: auto;
+    min-height: 60vh;
+  }
+  .home-container {
+    flex-direction: column;
+    height: auto;
+  }
+}

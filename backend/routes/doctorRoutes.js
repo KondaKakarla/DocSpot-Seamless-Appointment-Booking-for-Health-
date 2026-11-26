@@ -1,41 +1,24 @@
 const express = require("express");
-const multer = require("multer");
 const authMiddleware = require("../middlewares/authMiddleware");
+const requireRole = require("../middlewares/roleMiddleware");
 const {
   updateDoctorProfileController,
+  getDoctorAvailabilityController,
+  updateDoctorAvailabilityController,
   getAllDoctorAppointmentsController,
   handleStatusController,
+  handleRescheduleController,
   documentDownloadController,
 } = require("../controllers/doctorC");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now();
-    cb(null, uniqueSuffix + "-" + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
 const router = express.Router();
 
-router.post("/updateprofile", authMiddleware, updateDoctorProfileController);
-
-router.get(
-  "/getdoctorappointments",
-  authMiddleware,
-  getAllDoctorAppointmentsController
-);
-
-router.post("/handlestatus", authMiddleware, handleStatusController);
-
-router.get(
-  "/getdocumentdownload",
-  authMiddleware,
-  documentDownloadController
-);
+router.post("/updateprofile", authMiddleware, requireRole("doctor"), updateDoctorProfileController);
+router.get("/getavailability", authMiddleware, requireRole("doctor"), getDoctorAvailabilityController);
+router.post("/updateavailability", authMiddleware, requireRole("doctor"), updateDoctorAvailabilityController);
+router.get("/getdoctorappointments", authMiddleware, requireRole("doctor"), getAllDoctorAppointmentsController);
+router.post("/handlestatus", authMiddleware, requireRole("doctor"), handleStatusController);
+router.post("/handlerezchedule", authMiddleware, requireRole("doctor"), handleRescheduleController);
+router.get("/getdocumentdownload", authMiddleware, documentDownloadController);
 
 module.exports = router;

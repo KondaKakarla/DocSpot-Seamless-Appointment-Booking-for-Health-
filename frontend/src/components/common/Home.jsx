@@ -1,36 +1,14 @@
 import React from 'react'
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
-import { Container, Button } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
+import AppNavbar from './AppNavbar';
 
 import p3 from '../../images/p3.webp'
 
 const Home = () => {
   return (
     <>
-      <Navbar expand="lg" className="bg-body-tertiary">
-        <Container fluid>
-          <Navbar.Brand>
-            <Link to={'/'}>MediCareBook</Link>
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse id="navbarScroll">
-            <Nav
-              className="me-auto my-2 my-lg-0"
-              style={{ maxHeight: '100px' }}
-              navbarScroll
-            >
-            </Nav>
-            <Nav>
-              <Link to={'/'}>Home</Link>
-              <Link to={'/login'}>Login</Link>
-              <Link to={'/register'}>Register</Link>
-            </Nav>
-
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <AppNavbar />
 
       <div className='home-container'>
         <div className="left-side">
@@ -41,7 +19,11 @@ const Home = () => {
             <span className='f-letter'>Effortlessly schedule your doctor</span><br />
             <span className='s-letter'>appointments with just a few clicks,</span> <br />
             <span className='t-letter'>putting your health in your hands.</span><br />
-            <Button color='info' className='mt-3 register'><Link to={'/Login'}>Book your Doctor</Link></Button>
+            <Link to={'/login'} className='btn btn-dark mt-3'>Book your Doctor</Link>
+            <br />
+            <Link to="/doctor/register" className="btn btn-outline-dark mt-3">
+              Join as a Doctor
+            </Link>
           </p>
         </div>
       </div>
